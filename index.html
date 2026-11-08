@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Evoluzione Aperta · Parlami un po' di te</title>
+<meta name="description" content="Lasciami un segnale. Ti ascolto io, di persona.">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#07120d;--card:#0e1e17;--ink:#eafff3;--soft:#8fbfa6;--line:#1d3a2c;--accent:#3ee08a;--accent-ink:#04170d;--mine:#12281e;--his:#0f3324;--danger:#ff8a80;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--ink)}
+body{font-family:"Nunito",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:18px;line-height:1.6;-webkit-text-size-adjust:100%;background:radial-gradient(120% 60% at 50% 0%,#0f2a1e 0%,var(--bg) 60%) fixed}
+a{color:var(--accent)}
+textarea:focus,button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+textarea::placeholder{color:var(--soft)}
+.wrap{max-width:560px;margin:0 auto;padding:28px 20px 60px}
+.brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 22px}
+h1{font-size:31px;line-height:1.2;font-weight:800;margin:0 0 14px;letter-spacing:-.01em}
+h2{font-size:21px;font-weight:800;margin:0 0 10px}
+p{margin:0 0 14px}
+.soft{color:var(--soft)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px 0}
+.ui{}
+button,.btn{font:inherit;font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:12px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
+.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);width:100%;font-weight:800;border-radius:999px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>*{flex:1 1 140px}
+.mic{width:128px;height:128px;border-radius:50%;margin:8px auto 10px;display:flex;font-size:15px;font-weight:800;flex-direction:column;border:2px solid var(--accent);color:var(--accent);background:var(--card);box-shadow:0 0 0 8px rgba(62,224,138,.08),0 0 40px rgba(62,224,138,.18)}
+.mic svg{width:40px;height:40px}
+.mic.rec{background:var(--accent);color:var(--accent-ink);animation:pulse 1.6s infinite;box-shadow:0 0 0 10px rgba(62,224,138,.18),0 0 60px rgba(62,224,138,.35)}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.center{text-align:center}
+.timer{font-variant-numeric:tabular-nums;color:var(--soft);font-size:15px;min-height:22px}
+textarea{width:100%;min-height:130px;font:inherit;font-size:17px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical}
+audio{width:100%;margin:8px 0}
+.err{color:var(--danger);font-size:14px;min-height:20px;margin:8px 0 0}
+.or{display:flex;align-items:center;gap:12px;color:var(--soft);font-size:14px;margin:18px 0}
+.or:before,.or:after{content:"";flex:1;border-top:1px solid var(--line)}
+.link{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:var(--accent);word-break:break-all;background:var(--bg);border:1px dashed var(--line);border-radius:10px;padding:10px;margin:10px 0}
+.msg{border-radius:14px;padding:12px 14px;margin:10px 0;max-width:92%}
+.msg.me{background:var(--mine);margin-left:auto}
+.msg.sal{background:var(--his)}
+.who{font-size:12px;color:var(--soft);margin-bottom:4px}
+.note{font-size:13px;color:var(--soft);line-height:1.5}
+.banner{font-size:13px;background:var(--mine);border-radius:10px;padding:8px 12px;margin-bottom:16px}
+.plain{margin:28px 0 0}
+.plain textarea{min-height:90px;margin-top:6px}
+#v-home h1{margin-bottom:22px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:1.5;color:var(--soft);cursor:pointer}
+.check input{width:20px;height:20px;margin-top:2px;flex:0 0 auto;accent-color:var(--accent)}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Evoluzione Aperta</div>
+  <div id="demo" class="banner" hidden>Modalità prova: i messaggi restano solo su questo dispositivo finché non colleghi l'archivio.</div>
+
+  <!-- PAGINA DI INGRESSO -->
+  <section id="v-home" hidden>
+    <h1>Benvenuto, internauta.<br>Siamo solo io e te.</h1>
+    <p>Ho voglia di ascoltarti.</p>
+    <p>Se ti va, lasciami la tua voce o qualche riga. Quello che vuoi, come vuoi. Ti risponderò io, con calma, di persona.</p>
+
+    <form id="f-home" class="plain" novalidate>
+      <div class="center">
+        <button type="button" class="mic" id="mic-home" aria-label="Registra un messaggio vocale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          <span>Parla</span>
+        </button>
+        <div class="timer" id="timer-home"></div>
+      </div>
+      <div id="player-home" hidden>
+        <audio controls id="audio-home"></audio>
+        <button type="button" id="del-home" style="width:100%">Cancella e registra di nuovo</button>
+      </div>
+      <textarea id="text-home" maxlength="5000" placeholder="oppure scrivi qui"></textarea>
+      <input class="hp" id="hp-home" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="note" style="margin:14px 0 10px">Nessun nome, email o numero. Il tuo messaggio lo ascolto solo io, Salvatore Saitta, per risponderti nel tuo spazio. È custodito su Google e cancellato dopo 12 mesi senza nuovi messaggi, o prima se me lo chiedi. <a href="#" id="privacy-link">Come custodisco i tuoi messaggi</a></p>
+      <label class="check"><input type="checkbox" id="ok-home"> <span>Ho almeno 14 anni e acconsento che Salvatore custodisca il mio messaggio, comprese eventuali informazioni delicate che scelgo di condividere, solo per rispondermi.</span></label>
+      <p class="err" id="err-home" role="alert"></p>
+      <button type="submit" class="primary" id="send-home">Invia</button>
+    </form>
+  </section>
+
+  <!-- DOPO L'INVIO: IL REGALO -->
+  <section id="v-grazie" hidden>
+    <h1>Il tuo messaggio è arrivato.</h1>
+    <p>Ti risponderò io, di persona, non una macchina.</p>
+    <div class="card">
+      <h2>Questo è il tuo link segreto</h2>
+      <p>È l'unico filo tra noi. Non chiede nome né password, quindi custodiscilo bene. Mandalo a una persona cara, oppure a te stesso: nelle note, su WhatsApp, Telegram o per email.</p>
+      <div class="link" id="link-grazie"></div>
+      <div data-share></div>
+    </div>
+    <p class="note">Chi possiede questo link può entrare nel tuo spazio: condividilo solo con chi ti è caro.</p>
+    <p class="note" id="demo-admin-hint" hidden>Prova: <a href="#" id="demo-admin-link" style="color:inherit">apri lo spazio come lo vedrebbe Salvatore</a> e scrivi una risposta.</p>
+  </section>
+
+  <!-- LO SPAZIO PRIVATO -->
+  <section id="v-spazio" hidden>
+    <h1 id="spazio-title">Il tuo spazio</h1>
+    <p class="soft" id="spazio-sub">Qui trovi le mie risposte. Torna quando vuoi, il link è sempre questo.</p>
+    <div id="thread"></div>
+    <p class="err" id="err-thread" role="alert"></p>
+
+    <form id="f-spazio" class="card" novalidate>
+      <div id="spazio-mic" class="center">
+        <button type="button" class="mic" id="mic-spazio" aria-label="Registra un messaggio vocale">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+          <span>Parla</span>
+        </button>
+        <div class="timer" id="timer-spazio"></div>
+      </div>
+      <div id="player-spazio" hidden>
+        <audio controls id="audio-spazio"></audio>
+        <button type="button" id="del-spazio" style="width:100%">Cancella e registra di nuovo</button>
+      </div>
+      <div class="or" id="or-spazio">oppure scrivi</div>
+      <textarea id="text-spazio" maxlength="5000" placeholder="Scrivimi ancora..."></textarea>
+      <p class="err" id="err-spazio" role="alert"></p>
+      <button type="submit" class="primary" id="send-spazio">Invia</button>
+    </form>
+
+    <div class="card" id="spazio-share">
+      <h2>Non perdere il filo</h2>
+      <p>Se non l'hai ancora fatto, salva questo link o mandalo a una persona cara.</p>
+      <div data-share></div>
+    </div>
+  </section>
+
+  <!-- INFORMATIVA (da completare) -->
+  <section id="v-privacy" hidden>
+    <h1>Come custodisco i tuoi messaggi</h1>
+    <p class="soft">Informativa sul trattamento dei dati personali (art. 13 del Regolamento UE 2016/679, GDPR). Ultimo aggiornamento: novembre 2026.</p>
+
+    <h2>Chi tratta i dati</h2>
+    <p>Salvatore Saitta, Catania (Italia), email info@salvosaitta.com. Non è nominato un responsabile della protezione dei dati.</p>
+
+    <h2>Quali dati</h2>
+    <p>Il messaggio vocale e scritto che decidi di lasciarmi, la data di invio e il tuo link segreto, cioè un codice casuale che collega i tuoi messaggi alle mie risposte. Non raccolgo nome, email o numero di telefono. La tua voce e ciò che racconti possono renderti riconoscibile: per questo li tratto come dati personali. Ti chiedo di non condividere informazioni su altre persone.</p>
+
+    <h2>Perché e su quale base</h2>
+    <p>Solo per ascoltarti e risponderti personalmente. La base giuridica è il tuo consenso (art. 6, par. 1, lett. a GDPR), che esprimi con la casella e con l'invio; per eventuali informazioni delicate che scegli di condividere, come salute, fede, orientamento od opinioni, il tuo consenso esplicito (art. 9, par. 2, lett. a). Puoi revocarlo in qualsiasi momento chiedendomi di cancellare tutto; la revoca non tocca ciò che è avvenuto prima. Non uso i tuoi messaggi per pubblicità, profilazione, addestramento di intelligenze artificiali o riconoscimento vocale, e non li pubblico.</p>
+
+    <h2>Chi altro riceve i dati</h2>
+    <p>Google, che custodisce messaggi e vocali nel mio archivio (Fogli e Drive) e può trasferirli negli Stati Uniti sulla base della decisione di adeguatezza UE-USA (Data Privacy Framework). GitHub Inc. (Stati Uniti), che ospita questa pagina e registra per proprie finalità di sicurezza l'indirizzo IP di chi la visita (vedi la GitHub Privacy Statement). Nessun altro.</p>
+
+    <h2>Per quanto tempo</h2>
+    <p>I tuoi messaggi, i vocali e le mie risposte vengono cancellati automaticamente dopo 12 mesi senza nuovi messaggi, oppure prima, entro 30 giorni dalla tua richiesta.</p>
+
+    <h2>Memoria del dispositivo</h2>
+    <p>Questa pagina non usa cookie e non salva nulla sul tuo dispositivo. Il link segreto lo custodisci tu.</p>
+
+    <h2>Il tuo link segreto</h2>
+    <p>Chiunque possieda il tuo link può leggere il tuo spazio: custodiscilo e condividilo solo con chi ti è caro. Se pensi che qualcun altro lo abbia, scrivimelo e chiudo quello spazio.</p>
+
+    <h2>I tuoi diritti</h2>
+    <p>Puoi chiedermi di vedere i tuoi dati, correggerli, cancellarli, limitarne il trattamento, riceverne una copia, opporti o revocare il consenso (artt. 15–22 GDPR). Poiché non conosco la tua identità, il modo per farlo è scrivermelo nel tuo spazio, oppure a info@salvosaitta.com indicando il tuo link segreto: è l'unico modo per sapere quali messaggi sono tuoi (art. 11 GDPR). Hai anche il diritto di presentare reclamo al Garante per la protezione dei dati personali (garanteprivacy.it).</p>
+
+    <h2>Facoltatività</h2>
+    <p>Lasciarmi un messaggio è del tutto libero. Senza messaggio, semplicemente non posso risponderti.</p>
+
+    <h2>Minori</h2>
+    <p>Questo spazio è riservato a chi ha almeno 14 anni. Se mi accorgo che un messaggio arriva da una persona più giovane, lo cancello.</p>
+
+    <h2>Decisioni automatizzate</h2>
+    <p>Nessuna. Ti risponde sempre una persona: io.</p>
+
+    <button type="button" onclick="history.back()" style="margin-top:8px">Torna indietro</button>
+  </section>
+</div>
+
+<script>
+/* ================== CONFIGURAZIONE ==================
+   Incolla qui l'URL della web app di Google Apps Script.
+   Se resta vuoto, la pagina funziona in "modalità prova":
+   tutto resta salvato solo sul dispositivo. */
+const API_URL = "";
+const MAX_SECONDI = 180;
+/* ==================================================== */
+
+const DEMO = !API_URL;
+const $ = id => document.getElementById(id);
+
+function parseHash(){
+  const h = location.hash.replace(/^#/, "");
+  const out = {};
+  h.split("&").forEach(p => { const [k, v] = p.split("="); if (k) out[k] = decodeURIComponent(v || ""); });
+  return out;
+}
+function secretLink(token){ return location.origin + location.pathname + "#t=" + token; }
+function show(view){
+  ["home","grazie","spazio","privacy"].forEach(v => $("v-"+v).hidden = v !== view);
+  window.scrollTo(0,0);
+}
+
+/* ---------- Archivio: Apps Script oppure prova locale ---------- */
+function demoDb(){ try { return JSON.parse(localStorage.getItem("ea-demo") || "{}"); } catch(e){ return {}; } }
+function demoSave(db){ try { localStorage.setItem("ea-demo", JSON.stringify(db)); } catch(e){} }
+function newToken(){
+  const a = new Uint8Array(24); crypto.getRandomValues(a);
+  return Array.from(a, b => b.toString(16).padStart(2,"0")).join("");
+}
+
+async function api(action, data){
+  if (DEMO){
+    const db = demoDb();
+    if (action === "create"){
+      const t = newToken();
+      db[t] = [{ da:"persona", testo:data.testo||"", audio:!!data.audio, quando:Date.now() }];
+      demoSave(db); return { ok:true, token:t };
+    }
+    if (action === "add" || action === "reply"){
+      if (!db[data.token]) return { ok:false, errore:"Spazio non trovato." };
+      db[data.token].push({ da: action==="reply" ? "salvatore" : "persona", testo:data.testo||"", audio:!!data.audio, quando:Date.now() });
+      demoSave(db); return { ok:true };
+    }
+    if (action === "thread"){
+      return db[data.token] ? { ok:true, messaggi:db[data.token] } : { ok:false, errore:"Spazio non trovato." };
+    }
+  }
+  if (action === "thread"){
+    const r = await fetch(API_URL + "?action=thread&token=" + encodeURIComponent(data.token));
+    return r.json();
+  }
+  const r = await fetch(API_URL, { method:"POST", body: JSON.stringify(Object.assign({ action }, data)) });
+  return r.json();
+}
+
+/* ---------- Registratore vocale ---------- */
+function recorder(prefix){
+  const btn = $("mic-"+prefix), timer = $("timer-"+prefix), player = $("player-"+prefix), audio = $("audio-"+prefix);
+  const state = { blob:null, mime:"" };
+  let mr = null, chunks = [], secs = 0, tick = null, stream = null;
+
+  function pickMime(){
+    const opts = ["audio/webm;codecs=opus","audio/mp4","audio/ogg;codecs=opus","audio/webm"];
+    for (const m of opts) if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(m)) return m;
+    return "";
+  }
+  function stop(){ if (mr && mr.state === "recording") mr.stop(); }
+  function fmt(s){ return Math.floor(s/60) + ":" + String(s%60).padStart(2,"0"); }
+
+  btn.addEventListener("click", async () => {
+    $("err-"+prefix).textContent = "";
+    if (mr && mr.state === "recording"){ stop(); return; }
+    if (!navigator.mediaDevices || !window.MediaRecorder){
+      $("err-"+prefix).textContent = "Il microfono non è disponibile su questo browser. Puoi scrivermi qui sotto.";
+      return;
+    }
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio:true }); }
+    catch(e){ $("err-"+prefix).textContent = "Non riesco ad accedere al microfono. Controlla i permessi oppure scrivimi qui sotto."; return; }
+    const mime = pickMime();
+    mr = new MediaRecorder(stream, mime ? { mimeType:mime } : undefined);
+    chunks = []; secs = 0;
+    mr.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    mr.onstop = () => {
+      clearInterval(tick); stream.getTracks().forEach(t => t.stop());
+      state.mime = mr.mimeType || mime || "audio/webm";
+      state.blob = new Blob(chunks, { type: state.mime });
+      audio.src = URL.createObjectURL(state.blob);
+      player.hidden = false; btn.classList.remove("rec");
+      btn.querySelector("span").textContent = "Parla";
+      timer.textContent = "Vocale pronto · " + fmt(secs);
+    };
+    mr.start();
+    btn.classList.add("rec"); btn.querySelector("span").textContent = "Stop";
+    timer.textContent = "0:00 / " + fmt(MAX_SECONDI);
+    tick = setInterval(() => { secs++; timer.textContent = fmt(secs) + " / " + fmt(MAX_SECONDI); if (secs >= MAX_SECONDI) stop(); }, 1000);
+  });
+
+  $("del-"+prefix).addEventListener("click", () => {
+    state.blob = null; audio.removeAttribute("src"); player.hidden = true; timer.textContent = "";
+  });
+  state.reset = () => { state.blob = null; audio.removeAttribute("src"); player.hidden = true; timer.textContent = ""; };
+  state.isRecording = () => mr && mr.state === "recording";
+  return state;
+}
+
+function blobToBase64(blob){
+  return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(",")[1]); r.onerror = rej; r.readAsDataURL(blob); });
+}
+
+/* ---------- Condivisione cross-platform ---------- */
+function renderShare(container, url){
+  const text = "Il mio link segreto per Evoluzione Aperta. Non perderlo: è l'unico filo con Salvatore.";
+  const enc = encodeURIComponent;
+  container.innerHTML = "";
+  const main = document.createElement("button");
+  main.type = "button"; main.className = "primary"; main.textContent = "Condividi il link segreto";
+  const fallback = document.createElement("div");
+  fallback.className = "row"; fallback.style.marginTop = "10px";
+  fallback.innerHTML =
+    '<button type="button" data-copy>Copia il link</button>' +
+    '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=' + enc(text + " " + url) + '">WhatsApp</a>' +
+    '<a class="btn" target="_blank" rel="noopener" href="https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text) + '">Telegram</a>' +
+    '<a class="btn" href="mailto:?subject=' + enc("Il mio link segreto · Evoluzione Aperta") + '&body=' + enc(text + "\n\n" + url) + '">Email</a>';
+  const status = document.createElement("p"); status.className = "note"; status.style.marginTop = "8px";
+  container.append(main, fallback, status);
+
+  main.addEventListener("click", async () => {
+    if (navigator.share){
+      try { await navigator.share({ title:"Evoluzione Aperta", text, url }); status.textContent = ""; return; }
+      catch(e){ if (e && e.name === "AbortError") return; }
+    }
+    fallback.scrollIntoView({ behavior:"smooth", block:"center" });
+    status.textContent = "Scegli dove salvarlo qui sopra.";
+  });
+  fallback.querySelector("[data-copy]").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(url); status.textContent = "Link copiato. Incollalo nelle note o in un messaggio a te stesso."; }
+    catch(e){ status.textContent = "Tieni premuto sul link qui sopra per copiarlo."; }
+  });
+}
+
+/* ---------- Pagina di ingresso ---------- */
+const recHome = recorder("home");
+$("f-home").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("err-home"), testo = $("text-home").value.trim();
+  if ($("hp-home").value) return;
+  if (recHome.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
+  if (!testo && !recHome.blob){ err.textContent = "Lasciami un vocale o qualche riga prima di inviare."; return; }
+  if (!$("ok-home").checked){ err.textContent = "Per inviare, conferma la casella qui sopra."; return; }
+  err.textContent = ""; const b = $("send-home"); b.disabled = true; b.textContent = "Invio in corso...";
+  try {
+    const data = { testo };
+    if (recHome.blob){ data.audio = await blobToBase64(recHome.blob); data.mime = recHome.mime; }
+    const r = await api("create", data);
+    if (!r.ok) throw new Error(r.errore || "");
+    $("text-home").value = ""; $("ok-home").checked = false; recHome.reset();
+    const url = secretLink(r.token);
+    $("link-grazie").textContent = url;
+    renderShare(document.querySelector("#v-grazie [data-share]"), url);
+    if (DEMO){ $("demo-admin-hint").hidden = false; $("demo-admin-link").onclick = ev => { ev.preventDefault(); location.hash = "t=" + r.token + "&k=prova"; }; }
+    show("grazie");
+  } catch(ex){
+    err.textContent = "Qualcosa non ha funzionato, il messaggio non è partito. Riprova tra poco.";
+  } finally { b.disabled = false; b.textContent = "Invia"; }
+});
+$("text-home").addEventListener("input", () => $("err-home").textContent = "");
+$("ok-home").addEventListener("change", () => $("err-home").textContent = "");
+
+/* ---------- Spazio privato ---------- */
+const recSpazio = recorder("spazio");
+let current = { token:null, key:null };
+
+function fmtData(ms){ try { return new Date(ms).toLocaleString("it-IT", { day:"numeric", month:"long", hour:"2-digit", minute:"2-digit" }); } catch(e){ return ""; } }
+
+async function loadThread(){
+  const box = $("thread"); $("err-thread").textContent = "";
+  box.innerHTML = '<p class="note">Carico i messaggi...</p>';
+  try {
+    const r = await api("thread", { token: current.token });
+    if (!r.ok){ box.innerHTML = ""; $("err-thread").textContent = "Questo link non corrisponde a nessuno spazio. Controlla di averlo copiato per intero."; $("f-spazio").hidden = true; $("spazio-share").hidden = true; return; }
+    box.innerHTML = "";
+    const admin = !!current.key;
+    r.messaggi.forEach(m => {
+      const d = document.createElement("div");
+      const mine = admin ? m.da === "salvatore" : m.da === "persona";
+      d.className = "msg " + (m.da === "salvatore" ? "sal" : "me");
+      const who = document.createElement("div"); who.className = "who";
+      who.textContent = (m.da === "salvatore" ? (admin ? "Tu (Salvatore)" : "Salvatore") : (admin ? "La persona" : "Tu")) + " · " + fmtData(m.quando);
+      const body = document.createElement("div");
+      body.textContent = (m.audio ? "[messaggio vocale] " : "") + (m.testo || "");
+      d.append(who, body); box.append(d);
+    });
+    if (!r.messaggi.some(m => m.da === "salvatore") && !admin){
+      const w = document.createElement("p"); w.className = "note"; w.textContent = "Ho ricevuto il tuo segnale. Ti risponderò qui, appena ti avrò ascoltato.";
+      box.append(w);
+    }
+  } catch(e){ box.innerHTML = ""; $("err-thread").textContent = "Non riesco a caricare i messaggi. Riprova tra poco."; }
+}
+
+$("f-spazio").addEventListener("submit", async e => {
+  e.preventDefault();
+  const err = $("err-spazio"), testo = $("text-spazio").value.trim();
+  if (recSpazio.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
+  if (!testo && !recSpazio.blob){ err.textContent = current.key ? "Scrivi la tua risposta prima di inviare." : "Lasciami un vocale o qualche riga prima di inviare."; return; }
+  err.textContent = ""; const b = $("send-spazio"); b.disabled = true; b.textContent = "Invio in corso...";
+  try {
+    const data = { token: current.token, testo };
+    if (recSpazio.blob){ data.audio = await blobToBase64(recSpazio.blob); data.mime = recSpazio.mime; }
+    let r;
+    if (current.key){ data.key = current.key; r = await api("reply", data); }
+    else r = await api("add", data);
+    if (!r.ok) throw new Error(r.errore || "");
+    $("text-spazio").value = ""; recSpazio.reset();
+    await loadThread();
+  } catch(ex){ err.textContent = "Il messaggio non è partito. Riprova tra poco."; }
+  finally { b.disabled = false; b.textContent = "Invia"; }
+});
+$("text-spazio").addEventListener("input", () => $("err-spazio").textContent = "");
+
+/* ---------- Router ---------- */
+function route(){
+  const h = parseHash();
+  if (h.privacy !== undefined || location.hash === "#privacy"){ show("privacy"); return; }
+  if (h.t){
+    current = { token:h.t, key:h.k || null };
+    const admin = !!current.key;
+    $("spazio-title").textContent = admin ? "Rispondi a questa persona" : "Il tuo spazio";
+    $("spazio-sub").textContent = admin ? "Stai vedendo lo spazio come Salvatore. La tua risposta comparirà qui per la persona." : "Qui trovi le mie risposte. Torna quando vuoi, il link è sempre questo.";
+    $("spazio-mic").hidden = admin; $("or-spazio").hidden = admin;
+    $("text-spazio").placeholder = admin ? "Scrivi la tua risposta..." : "Scrivimi ancora...";
+    $("spazio-share").hidden = admin; $("f-spazio").hidden = false;
+    if (!admin) renderShare(document.querySelector("#spazio-share [data-share]"), secretLink(current.token));
+    show("spazio"); loadThread(); return;
+  }
+  show("home");
+}
+$("privacy-link").addEventListener("click", e => { e.preventDefault(); location.hash = "privacy"; });
+$("demo").hidden = !DEMO;
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
