@@ -3,12 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Evoluzione Aperta · Parlami un po' di te</title>
+<title>evoluzione aperta · Parlami un po' di te</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%22164%20119%20300%20300%22%3E%3Crect%20x%3D%22164%22%20y%3D%22119%22%20width%3D%22300%22%20height%3D%22300%22%20rx%3D%2260%22%20fill%3D%22%2307120d%22%2F%3E%3Cg%20fill%3D%22none%22%20stroke%3D%22%233ee08a%22%20stroke-width%3D%2220%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M238%20290H390A76%2076%200%201%200%20373.9%20336.8%22%2F%3E%3Cpath%20d%3D%22M371.2%20177.7A126%20126%200%201%201%20256.8%20177.7%22%2F%3E%3Cpath%20d%3D%22M440%20164V416%22%2F%3E%3C%2Fg%3E%3Ccircle%20cx%3D%22314%22%20cy%3D%22134%22%20r%3D%2215%22%20fill%3D%22%23eafff3%22%2F%3E%3C%2Fsvg%3E">
 <meta name="description" content="Lasciami un segnale. Ti ascolto io, di persona.">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#07120d;--card:#0e1e17;--ink:#eafff3;--soft:#8fbfa6;--line:#1d3a2c;--accent:#3ee08a;--accent-ink:#04170d;--mine:#12281e;--his:#0f3324;--danger:#ff8a80;color-scheme:dark}
 *{box-sizing:border-box}
@@ -18,7 +19,9 @@ a{color:var(--accent)}
 textarea:focus,button:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 textarea::placeholder{color:var(--soft)}
 .wrap{max-width:560px;margin:0 auto;padding:28px 20px 60px}
-.brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin:0 0 22px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Comfortaa',sans-serif;font-size:17px;font-weight:700;color:var(--ink);margin:0 0 22px}
+.brand svg{width:38px;height:38px;flex:none}
+.brand .ap{color:var(--accent)}
 h1{font-size:31px;line-height:1.2;font-weight:800;margin:0 0 14px;letter-spacing:-.01em}
 h2{font-size:21px;font-weight:800;margin:0 0 10px}
 p{margin:0 0 14px}
@@ -61,7 +64,7 @@ audio{width:100%;margin:8px 0}
 </head>
 <body>
 <div class="wrap">
-  <div class="brand">Evoluzione Aperta</div>
+  <div class="brand" aria-label="evoluzione aperta"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="164 119 300 300"><g fill="none" stroke="#3ee08a" stroke-width="14" stroke-linecap="round"><path d="M238 290H390A76 76 0 1 0 373.9 336.8"/><path d="M371.2 177.7A126 126 0 1 1 256.8 177.7"/><path d="M440 164V416"/></g><circle cx="314" cy="134" r="15" fill="#eafff3"/></svg><span>evoluzione <span class="ap">aperta</span></span></div>
   <div id="demo" class="banner" hidden>Modalità prova: i messaggi restano solo su questo dispositivo finché non colleghi l'archivio.</div>
 
   <!-- PAGINA DI INGRESSO -->
@@ -103,7 +106,7 @@ audio{width:100%;margin:8px 0}
     </div>
     <p class="note">Chi possiede questo link può entrare nel tuo spazio: condividilo solo con chi ti è caro.</p>
     <div class="about">
-      <h2>Cos'è Evoluzione Aperta</h2>
+      <h2>Cos'è evoluzione aperta</h2>
       <p>È uno spazio nato per ascoltare. Qui le persone si raccontano, e da quello che raccontano nascono idee, strumenti e relazioni. Il primo passo l'hai appena fatto. Adesso ti ascolto, ti rispondo nel tuo spazio e ti regalo le 12 domande.</p>
     </div>
     <p class="note" id="demo-admin-hint" hidden>Prova: <a href="#" id="demo-admin-link" style="color:inherit">apri lo spazio come lo vedrebbe Salvatore</a> e scrivi una risposta.</p>
@@ -296,7 +299,7 @@ function blobToBase64(blob){
 
 /* ---------- Condivisione cross-platform ---------- */
 function renderShare(container, url){
-  const text = "Il mio link segreto per Evoluzione Aperta. Non perderlo: è l'unico filo con Salvatore.";
+  const text = "Il mio link segreto per evoluzione aperta. Non perderlo: è l'unico filo con Salvatore.";
   const enc = encodeURIComponent;
   container.innerHTML = "";
   const main = document.createElement("button");
@@ -307,13 +310,13 @@ function renderShare(container, url){
     '<button type="button" data-copy>Copia il link</button>' +
     '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=' + enc(text + " " + url) + '">WhatsApp</a>' +
     '<a class="btn" target="_blank" rel="noopener" href="https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text) + '">Telegram</a>' +
-    '<a class="btn" href="mailto:?subject=' + enc("Il mio link segreto · Evoluzione Aperta") + '&body=' + enc(text + "\n\n" + url) + '">Email</a>';
+    '<a class="btn" href="mailto:?subject=' + enc("Il mio link segreto · evoluzione aperta") + '&body=' + enc(text + "\n\n" + url) + '">Email</a>';
   const status = document.createElement("p"); status.className = "note"; status.style.marginTop = "8px";
   container.append(main, fallback, status);
 
   main.addEventListener("click", async () => {
     if (navigator.share){
-      try { await navigator.share({ title:"Evoluzione Aperta", text, url }); status.textContent = ""; return; }
+      try { await navigator.share({ title:"evoluzione aperta", text, url }); status.textContent = ""; return; }
       catch(e){ if (e && e.name === "AbortError") return; }
     }
     fallback.scrollIntoView({ behavior:"smooth", block:"center" });
