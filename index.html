@@ -106,6 +106,9 @@ textarea:focus{border-left-color:var(--accent);background:linear-gradient(90deg,
 .keep{border-left-color:var(--accent)}
 .link{color:var(--accent)}
 .msg.me{background:var(--mine)}.msg.sal{background:var(--his)}
+.voice{display:inline-flex;align-items:center;gap:8px;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:13px;color:var(--accent);text-decoration:none;border:1px solid var(--line);background:rgba(255,255,255,.35);border-radius:999px;padding:5px 14px 5px 8px;margin:2px 0 6px}
+.voice svg{width:20px;height:20px}
+a.voice:hover{border-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -270,13 +273,20 @@ async function api(action, data){
       db[data.token].push({ da: action==="reply" ? "salvatore" : "persona", testo:data.testo||"", audio:!!data.audio, quando:Date.now() });
       demoSave(db); return { ok:true };
     }
-    if (action === "thread"){
+    if (action === "thread" || action === "thread_admin"){
       return db[data.token] ? { ok:true, messaggi:db[data.token] } : { ok:false, errore:"Spazio non trovato." };
     }
   }
   if (action === "thread"){
     const r = await fetch(API_URL + "?action=thread&token=" + encodeURIComponent(data.token));
     return r.json();
+  }
+  if (action === "thread_admin"){
+    try {
+      const r = await fetch(API_URL, { method:"POST", body: JSON.stringify({ action, token:data.token, key:data.key }) });
+      const j = await r.json(); if (j.ok) return j;
+    } catch(e){}
+    return api("thread", { token:data.token });
   }
   const r = await fetch(API_URL, { method:"POST", body: JSON.stringify(Object.assign({ action }, data)) });
   return r.json();
@@ -393,7 +403,7 @@ async function loadThread(){
   const box = $("thread"); $("err-thread").textContent = "";
   box.innerHTML = '<p class="note">Carico i messaggi...</p>';
   try {
-    const r = await api("thread", { token: current.token });
+    const r = current.key ? await api("thread_admin", { token: current.token, key: current.key }) : await api("thread", { token: current.token });
     if (!r.ok){ box.innerHTML = ""; $("err-thread").textContent = "Questo link non corrisponde a nessuno spazio. Controlla di averlo copiato per intero."; $("f-spazio").hidden = true; $("spazio-share").hidden = true; return; }
     box.innerHTML = "";
     const admin = !!current.key;
@@ -403,9 +413,17 @@ async function loadThread(){
       d.className = "msg " + (m.da === "salvatore" ? "sal" : "me");
       const who = document.createElement("div"); who.className = "who";
       who.textContent = (m.da === "salvatore" ? (admin ? "Tu (Salvatore)" : "Salvatore") : (admin ? "La persona" : "Tu")) + " · " + fmtData(m.quando);
-      const body = document.createElement("div");
-      body.textContent = (m.audio ? "[messaggio vocale] " : "") + (m.testo || "");
-      d.append(who, body); box.append(d);
+      d.append(who);
+      if (m.audio){
+        const v = document.createElement(admin && m.link ? "a" : "span");
+        v.className = "voice";
+        if (admin && m.link){ v.href = m.link; v.target = "_blank"; v.rel = "noopener"; }
+        v.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" pathLength="100" stroke-dasharray="85 15" transform="rotate(-63 12 13)"/><circle cx="12" cy="4" r="1.8" fill="#c98a45"/></svg><span></span>';
+        v.querySelector("span").textContent = admin ? (m.link ? "Ascolta" : "Vocale") : (m.da === "persona" ? "La tua voce" : "Voce");
+        d.append(v);
+      }
+      if (m.testo){ const body = document.createElement("div"); body.textContent = m.testo; d.append(body); }
+      box.append(d);
     });
     if (!r.messaggi.some(m => m.da === "salvatore") && !admin){
       const w = document.createElement("p"); w.className = "note"; w.textContent = "Ho ricevuto il tuo segnale. Ti risponderò qui, appena ti avrò ascoltato.";
