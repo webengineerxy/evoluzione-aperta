@@ -29,16 +29,30 @@ p{margin:0 0 14px}
 .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:20px;margin:20px 0}
 .ui{}
 button,.btn{font:inherit;font-size:16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:12px 16px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px}
-.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);width:100%;font-weight:800;border-radius:999px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1 1 140px}
-.mic{width:128px;height:128px;border-radius:50%;margin:8px auto 10px;display:flex;font-size:15px;font-weight:800;flex-direction:column;border:2px solid var(--accent);color:var(--accent);background:var(--card);box-shadow:0 0 0 8px rgba(62,224,138,.08),0 0 40px rgba(62,224,138,.18)}
-.mic svg{width:40px;height:40px}
-.mic.rec{background:var(--accent);color:var(--accent-ink);animation:pulse 1.6s infinite;box-shadow:0 0 0 10px rgba(62,224,138,.18),0 0 60px rgba(62,224,138,.35)}
-@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.mic{width:auto;height:auto;margin:6px auto 4px;padding:0;border:0;background:none;color:var(--accent);display:flex;flex-direction:column;gap:6px;font-size:15px;font-weight:600;min-height:0}
+.mic .ring{width:150px;height:150px;overflow:visible;filter:drop-shadow(0 0 18px rgba(62,224,138,.22));transition:transform .3s}
+.mic:hover .ring{transform:scale(1.03)}
+.mic .base{fill:rgba(62,224,138,.05);stroke:var(--accent);stroke-width:4;stroke-linecap:round;stroke-dasharray:85 15;transition:opacity .3s}
+.mic .arc{fill:none;stroke:#c8fadc;stroke-width:5;stroke-linecap:round;stroke-dasharray:0 100;transition:stroke-dasharray 1s linear}
+.mic .dot{fill:var(--ink)}
+.mic span{color:var(--soft)}
+.mic.rec .base{opacity:.35}
+.mic.rec .dot{animation:glow 1.6s infinite}
+.mic.rec span{color:var(--ink)}
+@keyframes glow{0%,100%{opacity:1}50%{opacity:.35}}
 .center{text-align:center}
+.step{color:var(--accent)}
 .timer{font-variant-numeric:tabular-nums;color:var(--soft);font-size:15px;min-height:22px}
-textarea{width:100%;min-height:130px;font:inherit;font-size:17px;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;resize:vertical}
+textarea{width:100%;min-height:130px;font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-left:2px solid var(--accent);border-radius:0;padding:6px 0 6px 16px;resize:vertical}
+textarea:focus{outline:none;border-left-color:#c8fadc;background:linear-gradient(90deg,rgba(62,224,138,.06),transparent 70%)}
+.primary{position:relative;background:transparent;color:var(--accent);border:2px solid var(--accent);width:100%;font-family:"Comfortaa",sans-serif;font-weight:700;font-size:17px;letter-spacing:.01em;border-radius:999px;gap:12px;transition:background .25s,color .25s}
+.primary:hover{background:var(--accent);color:var(--accent-ink)}
+.primary .sdot{width:10px;height:10px;border-radius:50%;background:currentColor;transition:transform .35s}
+.primary:hover .sdot{transform:translateY(-6px)}
+.primary:disabled .sdot{animation:rise 1s infinite}
+@keyframes rise{0%{transform:translateY(4px);opacity:.3}100%{transform:translateY(-8px);opacity:1}}
 audio{width:100%;margin:8px 0}
 .err{color:var(--danger);font-size:14px;min-height:20px;margin:8px 0 0}
 .or{display:flex;align-items:center;gap:12px;color:var(--soft);font-size:14px;margin:18px 0}
@@ -69,15 +83,15 @@ audio{width:100%;margin:8px 0}
 
   <!-- PAGINA DI INGRESSO -->
   <section id="v-home" hidden>
-    <h1>Benvenuto, internauta.<br>Siamo solo io e te.</h1>
-    <p>Ho voglia di ascoltarti.</p>
-    <p>Se ti va, lasciami la tua voce o qualche riga. Quello che vuoi, come vuoi. Ti risponderò io, con calma, di persona.</p>
+    <h1>Ti <span class="step">dono</span> questo spazio.</h1>
+    <p>Qui sei mio <span class="step">ospite</span>, e io ho voglia di <span class="step">ascoltarti</span>. Lasciami la tua voce o qualche riga, quello che vuoi, come vuoi. Ti risponderò io, con calma, di persona.</p>
+    <p>Poi, se vorrai, ci <span class="step">applicheremo</span> insieme e <span class="step">creeremo</span> qualcosa, passo dopo passo, trasformandolo in un'<span class="step">opera</span>: il nuovo centro attorno a cui ruoterà la tua evoluzione.</p>
 
     <form id="f-home" class="plain" novalidate>
       <div class="center">
         <button type="button" class="mic" id="mic-home" aria-label="Registra un messaggio vocale">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-          <span>Parla</span>
+          <svg class="ring" viewBox="0 0 160 160" aria-hidden="true"><circle class="base" cx="80" cy="84" r="62" pathLength="100" transform="rotate(-63 80 84)"/><circle class="arc" cx="80" cy="84" r="62" pathLength="100" transform="rotate(-63 80 84)"/><circle class="dot" cx="80" cy="22" r="7"/><g transform="translate(62 64) scale(1.5)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></g></svg>
+          <span>Raccontami a voce</span>
         </button>
         <div class="timer" id="timer-home"></div>
       </div>
@@ -85,12 +99,12 @@ audio{width:100%;margin:8px 0}
         <audio controls id="audio-home"></audio>
         <button type="button" id="del-home" style="width:100%">Cancella e registra di nuovo</button>
       </div>
-      <textarea id="text-home" maxlength="5000" placeholder="oppure scrivi qui"></textarea>
+      <textarea id="text-home" maxlength="5000" placeholder="oppure scrivimi qualche riga…"></textarea>
       <input class="hp" id="hp-home" tabindex="-1" autocomplete="off" aria-hidden="true">
       <p class="note" style="margin:14px 0 10px">Nessun nome, email o numero. Il tuo messaggio lo ascolto solo io, Salvatore Saitta, per risponderti nel tuo spazio. È custodito in un archivio cloud privato in Europa e cancellato dopo 12 mesi senza nuovi messaggi, o prima se me lo chiedi. <a href="#" id="privacy-link">Come custodisco i tuoi messaggi</a></p>
       <label class="check"><input type="checkbox" id="ok-home"> <span>Ho almeno 14 anni e acconsento che Salvatore custodisca il mio messaggio, comprese eventuali informazioni delicate che scelgo di condividere, solo per rispondermi.</span></label>
       <p class="err" id="err-home" role="alert"></p>
-      <button type="submit" class="primary" id="send-home">Invia</button>
+      <button type="submit" class="primary" id="send-home"><span class="sdot" aria-hidden="true"></span><span class="slab">Affidamelo</span></button>
     </form>
   </section>
 
@@ -122,8 +136,8 @@ audio{width:100%;margin:8px 0}
     <form id="f-spazio" class="card" novalidate>
       <div id="spazio-mic" class="center">
         <button type="button" class="mic" id="mic-spazio" aria-label="Registra un messaggio vocale">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
-          <span>Parla</span>
+          <svg class="ring" viewBox="0 0 160 160" aria-hidden="true"><circle class="base" cx="80" cy="84" r="62" pathLength="100" transform="rotate(-63 80 84)"/><circle class="arc" cx="80" cy="84" r="62" pathLength="100" transform="rotate(-63 80 84)"/><circle class="dot" cx="80" cy="22" r="7"/><g transform="translate(62 64) scale(1.5)" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></g></svg>
+          <span>Raccontami a voce</span>
         </button>
         <div class="timer" id="timer-spazio"></div>
       </div>
@@ -134,7 +148,7 @@ audio{width:100%;margin:8px 0}
       <div class="or" id="or-spazio">oppure scrivi</div>
       <textarea id="text-spazio" maxlength="5000" placeholder="Scrivimi ancora..."></textarea>
       <p class="err" id="err-spazio" role="alert"></p>
-      <button type="submit" class="primary" id="send-spazio">Invia</button>
+      <button type="submit" class="primary" id="send-spazio"><span class="sdot" aria-hidden="true"></span><span class="slab">Affidamelo</span></button>
     </form>
 
     <div class="card" id="spazio-share">
@@ -276,13 +290,13 @@ function recorder(prefix){
       state.blob = new Blob(chunks, { type: state.mime });
       audio.src = URL.createObjectURL(state.blob);
       player.hidden = false; btn.classList.remove("rec");
-      btn.querySelector("span").textContent = "Parla";
+      btn.querySelector("span").textContent = "Raccontami a voce"; btn.querySelector(".arc").setAttribute("stroke-dasharray","0 100");
       timer.textContent = "Vocale pronto · " + fmt(secs);
     };
     mr.start();
-    btn.classList.add("rec"); btn.querySelector("span").textContent = "Stop";
+    btn.classList.add("rec"); btn.querySelector("span").textContent = "Tocca per fermare";
     timer.textContent = "0:00 / " + fmt(MAX_SECONDI);
-    tick = setInterval(() => { secs++; timer.textContent = fmt(secs) + " / " + fmt(MAX_SECONDI); if (secs >= MAX_SECONDI) stop(); }, 1000);
+    tick = setInterval(() => { secs++; btn.querySelector(".arc").setAttribute("stroke-dasharray", (85*Math.min(1,secs/MAX_SECONDI)).toFixed(2)+" 100"); timer.textContent = fmt(secs) + " / " + fmt(MAX_SECONDI); if (secs >= MAX_SECONDI) stop(); }, 1000);
   });
 
   $("del-"+prefix).addEventListener("click", () => {
@@ -337,7 +351,7 @@ $("f-home").addEventListener("submit", async e => {
   if (recHome.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
   if (!testo && !recHome.blob){ err.textContent = "Lasciami un vocale o qualche riga prima di inviare."; return; }
   if (!$("ok-home").checked){ err.textContent = "Per inviare, conferma la casella qui sopra."; return; }
-  err.textContent = ""; const b = $("send-home"); b.disabled = true; b.textContent = "Invio in corso...";
+  err.textContent = ""; const b = $("send-home"); b.disabled = true; b.querySelector(".slab").textContent = "Sta arrivando…";
   try {
     const data = { testo };
     if (recHome.blob){ data.audio = await blobToBase64(recHome.blob); data.mime = recHome.mime; }
@@ -351,7 +365,7 @@ $("f-home").addEventListener("submit", async e => {
     show("grazie");
   } catch(ex){
     err.textContent = "Qualcosa non ha funzionato, il messaggio non è partito. Riprova tra poco.";
-  } finally { b.disabled = false; b.textContent = "Invia"; }
+  } finally { b.disabled = false; b.querySelector(".slab").textContent = "Affidamelo"; }
 });
 $("text-home").addEventListener("input", () => $("err-home").textContent = "");
 $("ok-home").addEventListener("change", () => $("err-home").textContent = "");
@@ -392,7 +406,7 @@ $("f-spazio").addEventListener("submit", async e => {
   const err = $("err-spazio"), testo = $("text-spazio").value.trim();
   if (recSpazio.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
   if (!testo && !recSpazio.blob){ err.textContent = current.key ? "Scrivi la tua risposta prima di inviare." : "Lasciami un vocale o qualche riga prima di inviare."; return; }
-  err.textContent = ""; const b = $("send-spazio"); b.disabled = true; b.textContent = "Invio in corso...";
+  err.textContent = ""; const b = $("send-spazio"); b.disabled = true; b.querySelector(".slab").textContent = "Sta arrivando…";
   try {
     const data = { token: current.token, testo };
     if (recSpazio.blob){ data.audio = await blobToBase64(recSpazio.blob); data.mime = recSpazio.mime; }
@@ -403,7 +417,7 @@ $("f-spazio").addEventListener("submit", async e => {
     $("text-spazio").value = ""; recSpazio.reset();
     await loadThread();
   } catch(ex){ err.textContent = "Il messaggio non è partito. Riprova tra poco."; }
-  finally { b.disabled = false; b.textContent = "Invia"; }
+  finally { b.disabled = false; b.querySelector(".slab").textContent = "Affidamelo"; }
 });
 $("text-spazio").addEventListener("input", () => $("err-spazio").textContent = "");
 
