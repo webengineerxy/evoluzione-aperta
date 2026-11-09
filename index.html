@@ -44,6 +44,10 @@ button,.btn{font:inherit;font-size:16px;border-radius:12px;border:1px solid var(
 @keyframes glow{0%,100%{opacity:1}50%{opacity:.35}}
 .center{text-align:center}
 .step{color:var(--accent)}
+.keep{border-left:2px solid var(--accent);padding:2px 0 2px 16px;margin:28px 0 20px}
+.keep p{color:var(--soft);font-size:16px;margin:0 0 8px}
+.keep .link{border:0;background:none;padding:0;margin:0}
+.keep [data-share]{margin-top:14px}
 .timer{font-variant-numeric:tabular-nums;color:var(--soft);font-size:15px;min-height:22px}
 textarea{width:100%;min-height:130px;font:inherit;font-size:17px;color:var(--ink);background:transparent;border:0;border-left:2px solid var(--accent);border-radius:0;padding:6px 0 6px 16px;resize:vertical}
 textarea:focus{outline:none;border-left-color:#c8fadc;background:linear-gradient(90deg,rgba(62,224,138,.06),transparent 70%)}
@@ -108,21 +112,15 @@ audio{width:100%;margin:8px 0}
     </form>
   </section>
 
-  <!-- DOPO L'INVIO: IL REGALO -->
+  <!-- DOPO L'INVIO -->
   <section id="v-grazie" hidden>
-    <h1>Il tuo messaggio è arrivato.</h1>
-    <p>Ti risponderò io, di persona, non una macchina.</p>
-    <div class="card">
-      <h2>Questo è il tuo link segreto</h2>
-      <p>È l'unico filo tra noi. Non chiede nome né password, quindi custodiscilo bene. Mandalo a una persona cara, oppure a te stesso: nelle note, su WhatsApp, Telegram o per email.</p>
+    <h1>Il tuo messaggio è con me.</h1>
+    <p>Adesso tocca a me <span class="step">ascoltarti</span>. Ti risponderò io, di persona, nel tuo spazio.</p>
+    <div class="keep">
+      <p>Questo è il tuo spazio. Custodiscilo: solo chi ha questo link può entrarci.</p>
       <div class="link" id="link-grazie"></div>
-      <div data-share></div>
     </div>
-    <p class="note">Chi possiede questo link può entrare nel tuo spazio: condividilo solo con chi ti è caro.</p>
-    <div class="about">
-      <h2>Cos'è evoluzione aperta</h2>
-      <p>È uno spazio nato per ascoltare. Qui le persone si raccontano, e da quello che raccontano nascono idee, strumenti e relazioni. Il primo passo l'hai appena fatto. Adesso ti ascolto, ti rispondo nel tuo spazio e ti regalo le 12 domande.</p>
-    </div>
+    <div data-share></div>
     <p class="note" id="demo-admin-hint" hidden>Prova: <a href="#" id="demo-admin-link" style="color:inherit">apri lo spazio come lo vedrebbe Salvatore</a> e scrivi una risposta.</p>
   </section>
 
@@ -151,9 +149,8 @@ audio{width:100%;margin:8px 0}
       <button type="submit" class="primary" id="send-spazio"><span class="sdot" aria-hidden="true"></span><span class="slab">Affidamelo</span></button>
     </form>
 
-    <div class="card" id="spazio-share">
-      <h2>Non perdere il filo</h2>
-      <p>Se non l'hai ancora fatto, salva questo link o mandalo a una persona cara.</p>
+    <div class="keep" id="spazio-share">
+      <p>Questo è il tuo spazio. Custodiscilo: solo chi ha questo link può entrarci.</p>
       <div data-share></div>
     </div>
   </section>
@@ -313,32 +310,20 @@ function blobToBase64(blob){
 
 /* ---------- Condivisione cross-platform ---------- */
 function renderShare(container, url){
-  const text = "Il mio link segreto per evoluzione aperta. Non perderlo: è l'unico filo con Salvatore.";
-  const enc = encodeURIComponent;
+  const text = "Il mio spazio su evoluzione aperta. Da custodire: è l'unico filo con Salvatore.";
   container.innerHTML = "";
   const main = document.createElement("button");
-  main.type = "button"; main.className = "primary"; main.textContent = "Condividi il link segreto";
-  const fallback = document.createElement("div");
-  fallback.className = "row"; fallback.style.marginTop = "10px";
-  fallback.innerHTML =
-    '<button type="button" data-copy>Copia il link</button>' +
-    '<a class="btn" target="_blank" rel="noopener" href="https://wa.me/?text=' + enc(text + " " + url) + '">WhatsApp</a>' +
-    '<a class="btn" target="_blank" rel="noopener" href="https://t.me/share/url?url=' + enc(url) + '&text=' + enc(text) + '">Telegram</a>' +
-    '<a class="btn" href="mailto:?subject=' + enc("Il mio link segreto · evoluzione aperta") + '&body=' + enc(text + "\n\n" + url) + '">Email</a>';
-  const status = document.createElement("p"); status.className = "note"; status.style.marginTop = "8px";
-  container.append(main, fallback, status);
-
+  main.type = "button"; main.className = "primary";
+  main.innerHTML = '<span class="sdot" aria-hidden="true"></span><span class="slab">Custodisci il link</span>';
+  const status = document.createElement("p"); status.className = "note"; status.style.marginTop = "10px";
+  container.append(main, status);
   main.addEventListener("click", async () => {
     if (navigator.share){
       try { await navigator.share({ title:"evoluzione aperta", text, url }); status.textContent = ""; return; }
       catch(e){ if (e && e.name === "AbortError") return; }
     }
-    fallback.scrollIntoView({ behavior:"smooth", block:"center" });
-    status.textContent = "Scegli dove salvarlo qui sopra.";
-  });
-  fallback.querySelector("[data-copy]").addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(url); status.textContent = "Link copiato. Incollalo nelle note o in un messaggio a te stesso."; }
-    catch(e){ status.textContent = "Tieni premuto sul link qui sopra per copiarlo."; }
+    try { await navigator.clipboard.writeText(url); status.textContent = "Link copiato. Incollalo dove lo ritroverai: nelle note o in un messaggio a te stesso."; }
+    catch(e){ status.textContent = "Tieni premuto sul link per copiarlo."; }
   });
 }
 
