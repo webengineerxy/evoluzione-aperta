@@ -119,7 +119,7 @@ a.voice:hover{border-color:var(--accent)}
   <!-- PAGINA DI INGRESSO -->
   <section id="v-home" hidden>
     <h1>Questo spazio è tuo.</h1>
-    <p>Te lo <span class="step">dono</span>. Usalo per raccontarmi di te, di un tuo bisogno, o semplicemente per dirmi qualcosa. Puoi lasciare la tua voce o qualche riga, come ti viene. Io ti <span class="step">ascolto</span>, e ti rispondo qui, con calma.</p>
+    <p>Te lo <span class="step">dono</span>. Usalo per raccontarti, per chiedere ciò di cui hai bisogno, o semplicemente per dirmi qualcosa. Puoi lasciare la tua voce o qualche riga, come ti viene. Io ti <span class="step">ascolto</span>, e ti rispondo qui, con calma.</p>
     <p class="soft">E se vorrai, quello che nasce qui potrà <span class="step">crescere</span>, un passo alla volta.</p>
 
     <form id="f-home" class="plain" novalidate>
@@ -374,7 +374,7 @@ $("f-home").addEventListener("submit", async e => {
   if (recHome.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
   if (!testo && !recHome.blob){ err.textContent = "Lasciami un vocale o qualche riga prima di inviare."; return; }
   if (!$("ok-home").checked){ err.textContent = "Per inviare, conferma la casella qui sopra."; return; }
-  err.textContent = ""; const b = $("send-home"); b.disabled = true; b.querySelector(".slab").textContent = "Sta arrivando…";
+  err.textContent = ""; const b = $("send-home"); b.disabled = true; b.querySelector(".slab").textContent = "Lo custodisco…";
   try {
     const data = { testo };
     if (recHome.blob){ data.audio = await blobToBase64(recHome.blob); data.mime = recHome.mime; }
@@ -437,7 +437,7 @@ $("f-spazio").addEventListener("submit", async e => {
   const err = $("err-spazio"), testo = $("text-spazio").value.trim();
   if (recSpazio.isRecording()){ err.textContent = "Ferma prima la registrazione."; return; }
   if (!testo && !recSpazio.blob){ err.textContent = current.key ? "Scrivi la tua risposta prima di inviare." : "Lasciami un vocale o qualche riga prima di inviare."; return; }
-  err.textContent = ""; const b = $("send-spazio"); b.disabled = true; b.querySelector(".slab").textContent = "Sta arrivando…";
+  err.textContent = ""; const b = $("send-spazio"); b.disabled = true; b.querySelector(".slab").textContent = "Lo custodisco…";
   try {
     const data = { token: current.token, testo };
     if (recSpazio.blob){ data.audio = await blobToBase64(recSpazio.blob); data.mime = recSpazio.mime; }
